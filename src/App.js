@@ -11,41 +11,7 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
 
-const MODEL_ID = 'face-detection';   
-const returnClarifaiRequestOptions = (imageUrl) => {
-  const PAT = '1234e48aba5a414c944ff81d7471716c';
 
-  const USER_ID = 'pee_jay1';       
-  const APP_ID = 'test';
-
-  const IMAGE_URL = imageUrl;
-
-
-  const raw = JSON.stringify({
-    "user_app_id": {
-        "user_id": USER_ID,
-        "app_id": APP_ID
-    },
-    "inputs": [
-        {
-            "data": {
-                "image": {
-                    "url": IMAGE_URL
-                }
-            }
-        }
-    ]
-});
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Key ' + PAT
-    },
-    body: raw
-};
-  return requestOptions;
-}
 
 const initialState = {
       input: '',
@@ -109,7 +75,13 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input})
-      fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", returnClarifaiRequestOptions(this.state.input))
+        fetch('http://localhost:3500/imageUrl', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            input: this.state.input
+            })
+        })
         .then(response => response.json())
         .then(response => {
           if (response) {
@@ -124,6 +96,7 @@ class App extends Component {
               .then(count => {
                 this.setState(Object.assign(this.state.user, {entries: count}))
             })
+              .catch(err => console.log('there was an error somewhere'))
 
           }
           this.displayFaceBox(this.calculateFaceLocation(response))

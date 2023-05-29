@@ -75,7 +75,7 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input})
-        fetch('http://localhost:3500/imageUrl', {
+        fetch('https://serversmartbrain.onrender.com/imageUrl', {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -148,3 +148,4 @@ class App extends Component {
 }
 
 export default App;
+
